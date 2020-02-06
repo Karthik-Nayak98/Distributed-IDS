@@ -32,7 +32,7 @@ int main()
 
     while (fscanf(fp, "%d %s %f", &pid, procName, &cpuPercent) != EOF)
     {
-        if (cpuPercent > 4.0)
+        if (cpuPercent > 8.0)
         {
             //system("sh process_kill.sh");
             sprintf(cmd, "%s %d %s", cmd, pid, procName);
