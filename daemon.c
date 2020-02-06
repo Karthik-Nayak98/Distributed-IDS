@@ -53,7 +53,8 @@ int main(int argc, char const *argv[])
     // Actual functionalities of the daemon
     while (1)
     {
-        }
+        
+    }
 
     return 0;
 }

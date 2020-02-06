@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/wait.h>
+#include <string.h>
 
 #define threshold 80
 
@@ -16,21 +17,28 @@ struct ProcDetails pt[2];
 int main()
 {
     FILE *fp;
-    char *cpuPercent;
+    float cpuPercent;
+    int pid;
+    char procName[100];
 
-    system("ps -eo %cpu --sort=-%cpu | head -11 | tail -10 > procUsage.txt");
+    char cmd[100] = {0};
+    char base[100] = "bash process_kill.sh ";
+
+    sprintf(cmd, "%s", base);
+
+    system("ps -eo pid,comm,%cpu --sort=-%cpu | head -11 | tail -10 > procUsage.txt");
 
     fp = fopen("procUsage.txt", "r");
 
-    while (!feof(fp))
+    while (fscanf(fp, "%d %s %f", &pid, procName, &cpuPercent) != EOF)
     {
-        fgets(fp, "%[^\n]", cpuPercent);
-        if (atoi(cpuPercent) < 5)
+        if (cpuPercent > 4.0)
         {
-            printf("%s\n", cpuPercent);
-            break;
+            //system("sh process_kill.sh");
+            sprintf(cmd, "%s %d %s", cmd, pid, procName);
+            system(cmd);
+            strcpy(cmd, "bash process_kill.sh ");
         }
     }
-
-        return 0;
+    return 0;
 }
