@@ -1,5 +1,11 @@
 [Unit]
-
+Description=Daemon For Distributed Instrusion Detection System
 
 [Service]
+Type=forking
+ExecStart=/home/manoj/Distributed-IDS/daemon
+Restart=on-failure
+RestartSec=5
 
+[Install]
+Alias=DIDS

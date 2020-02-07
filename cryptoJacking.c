@@ -32,12 +32,12 @@ int main()
 
     while (fscanf(fp, "%d %s %f", &pid, procName, &cpuPercent) != EOF)
     {
-        if (cpuPercent > 8.0)
+        if (cpuPercent > 7.0)
         {
             //system("sh process_kill.sh");
             sprintf(cmd, "%s %d %s", cmd, pid, procName);
             system(cmd);
-            strcpy(cmd, "bash process_kill.sh ");
+            strcpy(cmd, "bash processKill.sh ");
         }
     }
     return 0;

@@ -1,10 +1,10 @@
-13987 daemon           100
-12499 spotify          6.1
- 1780 gnome-shell      5.5
-12743 code             3.1
+ 1780 gnome-shell      5.6
+12499 spotify          5.3
+12743 code             4.2
  1606 Xorg             2.6
-12318 spotify          2.5
- 6228 chrome           2.4
+ 6228 chrome           2.2
+12727 code             2.1
+12318 spotify          1.7
  6264 chrome           1.6
-12727 code             1.6
-15632 chrome           1.0
+17408 chrome           1.0
+12703 code             0.9
