@@ -22,13 +22,13 @@ int main()
     char procName[100];
 
     char cmd[100] = {0};
-    char base[100] = "bash process_kill.sh ";
+    char base[100] = "bash processKill.sh ";
 
     sprintf(cmd, "%s", base);
 
-    system("ps -eo pid,comm,%cpu --sort=-%cpu | head -11 | tail -10 > procUsage.txt");
+    system("ps -eo pid,comm,%cpu --sort=-%cpu | head -11 | tail -10 > processDetails.txt");
 
-    fp = fopen("procUsage.txt", "r");
+    fp = fopen("processDetails.txt", "r");
 
     while (fscanf(fp, "%d %s %f", &pid, procName, &cpuPercent) != EOF)
     {
