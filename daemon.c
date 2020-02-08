@@ -7,6 +7,10 @@
 
 #include <stdio.h>
 #include <sys/wait.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 int main(int argc, char const *argv[])
 {
@@ -26,13 +30,13 @@ int main(int argc, char const *argv[])
     }
     else if (pid > 0)
     {
-        printf("PID of the process is %d", pid);
+        printf("PID of the parent process is %d\n", pid);
         exit(0);
     }
 
     umask(0);
 
-    sid = setid();
+    sid = setsid();
 
     if (sid < 0)
     {
@@ -44,16 +48,15 @@ int main(int argc, char const *argv[])
     chdir("/");
 
     // Closing stdin, stdout, stderr so it is not able to access the daemon
-    close(stdin);
-    close(stdout);
-    close(stderr);
+    close(STDIN_FILENO);
+    close(STDOUT_FILENO);
+    close(STDERR_FILENO);
 
     fp = fopen("syslog.txt", "w+");
 
     // Actual functionalities of the daemon
     while (1)
     {
-        
     }
 
     return 0;
