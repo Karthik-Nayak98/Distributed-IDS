@@ -11,7 +11,19 @@
 #include <unistd.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <pthread.h>
 
+void crypto()
+{
+    exec("");
+}
+void denialOfService()
+{
+}
+
+void bruteForce()
+{
+}
 int main(int argc, char const *argv[])
 {
     pid_t pid, sid;
@@ -48,15 +60,25 @@ int main(int argc, char const *argv[])
     chdir("/");
 
     // Closing stdin, stdout, stderr so it is not able to access the daemon
-    close(STDIN_FILENO);
-    close(STDOUT_FILENO);
-    close(STDERR_FILENO);
+    // close(STDIN_FILENO);
+    // close(STDOUT_FILENO);
+    // close(STDERR_FILENO);
 
     fp = fopen("syslog.txt", "w+");
+
+    //system(" zenity-- warning-- title = \" Warning High CPU usage \" --text = \" Do you want to kill the process $2 \" --width = 300 --height = 100");
+
+    pthread_t thread1, thread2, thread3;
 
     // Actual functionalities of the daemon
     while (1)
     {
+        pthread_create(&thread1, NULL, crypto, NULL);
+        pthread_create(&thread2, NULL, denialOfService, NULL);
+        pthread_create(&thread3, NULL, bruteForce, NULL);
+        pthread_join(thread1, NULL);
+        pthread_join(thread2, NULL);
+        pthread_join(thread3, NULL);
     }
 
     return 0;
