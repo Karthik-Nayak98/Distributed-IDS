@@ -13,12 +13,15 @@
 #include <sys/types.h>
 #include <pthread.h>
 
-void crypto()
+void *crypto(void *vargp)
 {
-    exec("");
+    char *args[] = {"./Distributed-IDS-basicAgent-CryptoJacking/crypto", NULL};
+    execvp(args[0], args);
 }
-void denialOfService()
+void *denialOfService(void *vargp)
 {
+    char *args[] = {"./Distributed-IDS-basicAgent-DOS/dos", NULL};
+    execvp(args[0], args);
 }
 
 void bruteForce()
@@ -75,10 +78,10 @@ int main(int argc, char const *argv[])
     {
         pthread_create(&thread1, NULL, crypto, NULL);
         pthread_create(&thread2, NULL, denialOfService, NULL);
-        pthread_create(&thread3, NULL, bruteForce, NULL);
+        //pthread_create(&thread3, NULL, bruteForce, NULL);
         pthread_join(thread1, NULL);
         pthread_join(thread2, NULL);
-        pthread_join(thread3, NULL);
+        //pthread_join(thread3, NULL);
     }
 
     return 0;
