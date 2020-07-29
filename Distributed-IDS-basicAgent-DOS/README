@@ -1,3 +1,0 @@
-To comiple the files    -->     gcc denialOfService.c dictionary.c
-To set the capabilites  -->     sudo setcap cap_net_admin,cap_net_raw=eip a.out
-Then run the file       -->     ./a.out
