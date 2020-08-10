@@ -66,16 +66,19 @@ void store_and_compare(unsigned char *source_address, Dictionary *dicti)
         if ((now_time - dict[loc_id].seconds) < 2)
         { //This condition checks the previous ip time and current time of IP
             if (dict[loc_id].frequency > dos_threshold)
-            {                                                                                                //if the time is < 2 seconds and frequency of IP is greater than threshold then flag the IP
-                printf("ALERT DOS  its freq  %d  and  ip is  %s\n", dict[loc_id].frequency, source_address); //Im just alerting here actually we should block that IP
-                
+            {
+                char comd[1000]="bash pingSweep.sh ";
+                strcat(comd,source_address);//if the time is < 2 seconds and frequency of IP is greater than threshold then flag the IP
+
                 strcpy(buff,source_address);
 				sendto(sockfd, buff, strlen(buff) + 1, 0, (SA *)&servaddr, sizeof(servaddr)); ///-----broadcstes attack ip  -----
-                
+
                 //--------------------------------blocking -------------------------------
                 strcat (block_cmd, buff);
 				strcat(block_cmd, " -j DROP");
 				int status = system(block_cmd);
+                printf("ALERT DOS  its frequency  %d  and  IP is  %s\n", dict[loc_id].frequency, source_address); //Im just alerting here actually we should block that IP
+                system(comd);
 				strcpy(block_cmd,"echo ubuntu@123 | sudo -S iptables -A INPUT -s ");
             }
         }
@@ -113,21 +116,21 @@ void *cryptoJack(void *vagrp)
     char procName[1000];
 
     char cmd[10000] = {0};
-    char base[1000] = "/usr/bin/bash /home/karthik/processKill.sh ";
+    char base[1000] = "bash processKill.sh ";
 
     sprintf(cmd, "%s", base);
-    
-    system("ps -eo pid,comm,%cpu --sort=-%cpu | head -11 | tail -10 > /home/karthik/processDetails.log");
 
-    fp = fopen("/home/karthik/processDetails.log", "r");
+    system("ps -eo pid,comm,%cpu --sort=-%cpu | head -11 | tail -10 > processDetails.log");
+
+    fp = fopen("processDetails.log", "r");
 
     while (fscanf(fp, "%u %s %f", &pid, procName, &cpuPercent) != EOF)
     {
-        if (cpuPercent > 90.0)
+        if (cpuPercent > 90.0 && strcmp(procName,"thread"))
         {
             sprintf(cmd, "%s %u %s", cmd, pid, procName);
             system(cmd);
-            strcpy(cmd, "usr/bin/bash /home/karthik/processKill.sh ");
+            strcpy(cmd, "bash processKill.sh ");
         }
     }
 }
@@ -151,7 +154,7 @@ void *denialOfService(void *vargp)
         saddr_size = sizeof(saddr);
         if (data_size = recvfrom(fd, buf, 65536, 0, &saddr, &saddr_size) > 0)
         {
-            printf("Raw socket created\n");
+            // printf("Raw socket created\n");
             print_ip_header(buf, sizeof(buf), dicti);
         }
         else
@@ -165,6 +168,7 @@ void *bruteforce(void *vargp)
     int count;
     char ip[16], substring[16];
 
+    char cmd[1000]="bash brute.sh ";
     char *command = "awk -f codes.awk /var/log/auth.log | grep -o \'[0-9]\\+\\.[0-9]\\+\\.[0-9]\\+\\.[0-9]\\+ [A-Z][a-z]\\+ [0-9]\\+\' | sort -r | uniq -c > output.log";
     system(command);
     system("cat output.log | sed 's/^[ \t]*//' > logfile.log");
@@ -175,7 +179,7 @@ void *bruteforce(void *vargp)
     {
 	    while (fscanf(fp, "%d %s", &count, substring) != EOF)
 		{
-		    if (count > 8)
+		    if (count > 1)
 		    {
 		        if(!dict_has(brute_dict, substring))
 		        {
@@ -187,8 +191,10 @@ void *bruteforce(void *vargp)
 		            strcat(block_cmd, buff);
 		            strcat(block_cmd, " -j DROP");
 		            int status = system(block_cmd);
+                    strcat(cmd,substring);
+                    system(cmd);
 		            strcpy(block_cmd, "echo ubuntu@123 | sudo -S iptables -A INPUT -s ");
-		            //blocking ip-----     
+		            //blocking ip-----
 
 		            printf("%s blocked\n", substring);
 		        }
@@ -202,11 +208,11 @@ int main()
     sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd == -1)
     {
-        printf("Socket creation unsuccessful..\n");
+        printf("Socket Creation Unsuccessful for Broadcast..\n");
         exit(0);
     }
 
-    printf("Socket successfully created..\n");
+    printf("Socket Successfully Created for Broadcast..\n");
     bzero(&servaddr, sizeof(servaddr));
 
     broadcast = 1;
